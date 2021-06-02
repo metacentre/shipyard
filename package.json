@@ -1,0 +1,37 @@
+{
+  "name": "shipyard",
+  "version": "1.0.0",
+  "description": "metacentre stack building",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava",
+    "test:watch": "ava --watch"
+  },
+  "keywords": [
+    "metacentre"
+  ],
+  "author": "av8ta",
+  "license": "MIT",
+  "dependencies": {
+    "secret-stack": "^6.4.0",
+    "ssb-caps": "^1.1.0",
+    "ssb-config": "^3.4.5",
+    "ssb-conn": "^4.0.1",
+    "ssb-db": "^20.4.0",
+    "ssb-master": "^1.0.3",
+    "ssb-plugins": "^1.0.4"
+  },
+  "devDependencies": {
+    "ava": "^3.15.0",
+    "fs-extra": "^10.0.0",
+    "rimraf": "^3.0.2"
+  },
+  "ava": {
+    "verbose": true,
+    "files": [
+      "test/**/*",
+      "!test/ssb-shipyard",
+      "!test/utils"
+    ]
+  }
+}
