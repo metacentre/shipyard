@@ -16,7 +16,6 @@
     "secret-stack": "^6.4.0",
     "ssb-caps": "^1.1.0",
     "ssb-config": "^3.4.5",
-    "ssb-conn": "^4.0.1",
     "ssb-db": "^20.4.0",
     "ssb-master": "^1.0.3",
     "ssb-plugins": "^1.0.4"
@@ -24,7 +23,8 @@
   "devDependencies": {
     "ava": "^3.15.0",
     "fs-extra": "^10.0.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "ssb-identities": "^2.1.1"
   },
   "ava": {
     "verbose": true,
