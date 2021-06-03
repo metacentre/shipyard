@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
+    "pretest": "node test/utils/setup-test",
+    "posttest": "node test/utils/cleanup",
     "test:watch": "ava --watch"
   },
   "keywords": [
@@ -32,6 +34,7 @@
     "files": [
       "test/**/*",
       "!test/ssb-shipyard",
+      "!test/cleanup.js",
       "!test/utils"
     ]
   }
