@@ -28,6 +28,7 @@
   },
   "ava": {
     "verbose": true,
+    "concurrency": 1,
     "files": [
       "test/**/*",
       "!test/ssb-shipyard",
