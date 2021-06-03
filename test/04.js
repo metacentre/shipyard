@@ -1,5 +1,5 @@
 const test = require('ava')
-const createSsbServer = require('../')
+const createSsbServer = require('..')
 
 test.serial('4. creates stack with custom options', t => {
   const sbot = createSsbServer({

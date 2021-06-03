@@ -1,5 +1,5 @@
 const test = require('ava')
-const createSsbServer = require('../')
+const createSsbServer = require('..')
 const { join } = require('path')
 
 test.serial('7. creates stack and loads plugins from directory', t => {

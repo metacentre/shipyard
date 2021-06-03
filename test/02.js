@@ -1,5 +1,5 @@
 const test = require('ava')
-const createSsbServer = require('../')
+const createSsbServer = require('..')
 
 test.serial('2. creates stack with default appname data dir', t => {
   delete process.env.ssb_appname

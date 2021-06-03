@@ -1,5 +1,5 @@
 const test = require('ava')
-const createSsbServer = require('../')
+const createSsbServer = require('..')
 
 test.serial('5. creates stack and loads user plugins', t => {
   const sbot = createSsbServer({ appname: 'ssb-shipyard' })
