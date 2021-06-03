@@ -24,7 +24,7 @@ function createServer(options = {}, { plugins = [], pluginsPath } = {}) {
   // load plugins from array
   if (plugins.length > 0) {
     plugins.forEach(plugin => {
-      createStack.use(require(plugin))
+      loadPlugin(createStack, plugin)
     })
   }
 
@@ -34,27 +34,7 @@ function createServer(options = {}, { plugins = [], pluginsPath } = {}) {
     fs.readdirSync(pluginsPath).map(fileName => {
       if (fileName.startsWith('.')) return
       const pluginPath = path.join(pluginsPath, fileName)
-      try {
-        const plugin = require(pluginPath)
-        const { name, version, manifest, init } = plugin
-        if (!isString(name))
-          throw new Error('The plugin "name" argument a is not a string')
-        if (!isString(version))
-          throw new Error('The plugin "version" argument is not a string')
-        if (!isObject(manifest))
-          throw new Error('The plugin "manifest" argument is not an object')
-        if (!isFunction(init))
-          throw new Error('The plugin "init" argument is not a function')
-        // it looks like a plugin and quacks like a plugin
-        console.info(`Loading plugin: ${name}`)
-        createStack.use(plugin)
-      } catch (error) {
-        console.error(
-          "Can't load this plugin. It may not be a plugin anyway...",
-          pluginPath,
-          error
-        )
-      }
+      loadPlugin(createStack, pluginPath)
     })
   }
 
@@ -82,4 +62,67 @@ function isObject(o) {
 
 function isFunction(f) {
   return !!(f && f.constructor && f.call && f.apply)
+}
+
+function isPlugin(plugin) {
+  try {
+    const { name, version, manifest, init } = plugin
+    if (!isString(name))
+      return new Error('The plugin "name" argument a is not a string')
+    if (!isString(version))
+      return new Error('The plugin "version" argument is not a string')
+    if (!isObject(manifest))
+      return new Error('The plugin "manifest" argument is not an object')
+    if (!isFunction(init))
+      return new Error('The plugin "init" argument is not a function')
+  } catch (error) {
+    return { error }
+  }
+  return { quacks: true }
+}
+
+function isModuleToRequire(path) {
+  try {
+    require.resolve(path)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+function loadPlugin(stack, pluginName) {
+  try {
+    /**
+     * if pluginName is a string, assume it's an npm name
+     * or a path to a module to be require'd
+     * if it's not a string assume it's an already require'd module
+     */
+    let plugin
+    if (isString(pluginName)) {
+      if (isModuleToRequire(pluginName)) plugin = require(pluginName)
+      else
+        throw new Error(
+          `pluginName is a string but not a module able to be require'd`
+        )
+    } else plugin = pluginName
+
+    const { error, quacks } = isPlugin(plugin)
+    if (error) throw error
+    if (quacks) {
+      // it looks like a plugin and quacks like a plugin
+      const { name } = plugin
+      console.info(`Loading plugin: ${name}`)
+      stack.use(plugin)
+    } else
+      console.info(
+        "Skipping plugin because it doesn't quack like a plugin: ",
+        plugin
+      )
+  } catch (error) {
+    console.error(
+      "Can't load this plugin. It may not be a plugin anyway...",
+      pluginName,
+      error
+    )
+  }
 }
