@@ -42,5 +42,16 @@
       "!test/cleanup.js",
       "!test/utils"
     ]
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/metacentre/shipyard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/metacentre/shipyard/issues"
+  },
+  "homepage": "https://github.com/metacentre/shipyard#readme"
 }
