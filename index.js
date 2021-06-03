@@ -91,38 +91,43 @@ function isModuleToRequire(path) {
 }
 
 function loadPlugin(stack, pluginName) {
-  try {
-    /**
-     * if pluginName is a string, assume it's an npm name
-     * or a path to a module to be require'd
-     * if it's not a string assume it's an already require'd module
-     */
-    let plugin
-    if (isString(pluginName)) {
-      if (isModuleToRequire(pluginName)) plugin = require(pluginName)
-      else
-        throw new Error(
-          `pluginName is a string but not a module able to be require'd`
-        )
-    } else plugin = pluginName
+  /** recursively load plugins */
+  if (Array.isArray(pluginName)) {
+    pluginName.forEach(p => loadPlugin(stack, p))
+  } else {
+    try {
+      /**
+       * if pluginName is a string, assume it's an npm name
+       * or a path to a module to be require'd
+       * if it's not a string assume it's an already require'd module
+       */
+      let plugin
+      if (isString(pluginName)) {
+        if (isModuleToRequire(pluginName)) plugin = require(pluginName)
+        else
+          throw new Error(
+            `pluginName is a string but not a module able to be require'd`
+          )
+      } else plugin = pluginName
 
-    const { error, quacks } = isPlugin(plugin)
-    if (error) throw error
-    if (quacks) {
-      // it looks like a plugin and quacks like a plugin
-      const { name } = plugin
-      console.info(`Loading plugin: ${name}`)
-      stack.use(plugin)
-    } else
-      console.info(
-        "Skipping plugin because it doesn't quack like a plugin: ",
-        plugin
+      const { error, quacks } = isPlugin(plugin)
+      if (error) throw error
+      if (quacks) {
+        // it looks like a plugin and quacks like a plugin
+        const { name } = plugin
+        console.info(`Loading plugin: ${name}`)
+        stack.use(plugin)
+      } else
+        console.info(
+          "Skipping plugin because it doesn't quack like a plugin: ",
+          plugin
+        )
+    } catch (error) {
+      console.error(
+        "Can't load this plugin. It may not be a plugin anyway...",
+        pluginName,
+        error
       )
-  } catch (error) {
-    console.error(
-      "Can't load this plugin. It may not be a plugin anyway...",
-      pluginName,
-      error
-    )
+    }
   }
 }
