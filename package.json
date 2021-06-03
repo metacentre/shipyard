@@ -1,5 +1,5 @@
 {
-  "name": "shipyard",
+  "name": "@metacentre/shipyard",
   "version": "1.0.0",
   "description": "metacentre stack building",
   "main": "index.js",
@@ -10,7 +10,11 @@
     "test:watch": "ava --watch"
   },
   "keywords": [
-    "metacentre"
+    "p2p",
+    "ssb",
+    "metacentre",
+    "secret-stack",
+    "secure-scuttlebutt"
   ],
   "author": "av8ta",
   "license": "MIT",
