@@ -5,7 +5,10 @@ const path = require('path')
 const fs = require('fs')
 const pkg = require('./package.json')
 
-function createServer(options = {}, { plugins = [], pluginsPath } = {}) {
+function createServer(
+  options = {},
+  { plugins = [], pluginsPath, lenient = [] } = {}
+) {
   const appname = options.appname || process.env.ssb_appname || 'ssb'
   console.info(`${pkg.name} v${pkg.version}`)
   console.info('creating ssb server with appname: ', appname)
@@ -24,7 +27,7 @@ function createServer(options = {}, { plugins = [], pluginsPath } = {}) {
   // load plugins from array
   if (plugins.length > 0) {
     plugins.forEach(plugin => {
-      loadPlugin(createStack, plugin)
+      loadPlugin(createStack, plugin, lenient)
     })
   }
 
@@ -34,7 +37,7 @@ function createServer(options = {}, { plugins = [], pluginsPath } = {}) {
     fs.readdirSync(pluginsPath).map(fileName => {
       if (fileName.startsWith('.')) return
       const pluginPath = path.join(pluginsPath, fileName)
-      loadPlugin(createStack, pluginPath)
+      loadPlugin(createStack, pluginPath, lenient)
     })
   }
 
@@ -81,19 +84,47 @@ function isPlugin(plugin) {
   return { quacks: true }
 }
 
-function isModuleToRequire(path) {
+function getPackageDir(packagePath) {
+  const a = packagePath.split('node_modules/')
+  return a[a.length - 1].split('/')[0]
+}
+
+function inLenientList(lenientList, packageName) {
+  let beLenient = false
+  lenientList.forEach(package => {
+    // console.log(`${package} === ${packageName}`, package == packageName)
+    if (package == packageName) beLenient = true
+  })
+  return beLenient
+}
+
+function isModuleToRequire(packagePath, lenientList) {
   try {
-    require.resolve(path)
-    return true
-  } catch (e) {
-    return false
+    const resolved = require.resolve(packagePath)
+    // console.log('resolved', resolved)
+
+    const packageName = getPackageDir(resolved)
+    // console.log('packageName', packageName)
+    // console.log(lenientList)
+    // console.log('packageName', packageName)
+    // console.log('lenientList[packageName]', lenientList[packageName])
+    // console.log(
+    //   'inLenientList(lenientList, packageName)',
+    //   inLenientList(lenientList, packageName)
+    // )
+    if (lenientList && inLenientList(lenientList, packageName))
+      return { toRequire: true, beLenient: true }
+
+    return { toRequire: true, beLenient: false }
+  } catch (error) {
+    return error
   }
 }
 
-function loadPlugin(stack, pluginName) {
+function loadPlugin(stack, pluginName, lenientList) {
   /** recursively load plugins */
   if (Array.isArray(pluginName)) {
-    pluginName.forEach(p => loadPlugin(stack, p))
+    pluginName.forEach(p => loadPlugin(stack, p, lenientList))
   } else {
     try {
       /**
@@ -102,8 +133,15 @@ function loadPlugin(stack, pluginName) {
        * if it's not a string assume it's an already require'd module
        */
       let plugin
+      var loadItAnyway = false
       if (isString(pluginName)) {
-        if (isModuleToRequire(pluginName)) plugin = require(pluginName)
+        var { toRequire, beLenient } = isModuleToRequire(
+          pluginName,
+          lenientList
+        )
+        // console.log('beLenient', beLenient)
+        loadItAnyway = beLenient
+        if (toRequire) plugin = require(pluginName)
         else
           throw new Error(
             `pluginName is a string but not a module able to be require'd`
@@ -112,7 +150,8 @@ function loadPlugin(stack, pluginName) {
 
       const { error, quacks } = isPlugin(plugin)
       if (error) throw error
-      if (quacks) {
+      // console.log('loadItAnyway', loadItAnyway)
+      if (quacks || loadItAnyway) {
         // it looks like a plugin and quacks like a plugin
         const { name } = plugin
         console.info(`Loading plugin: ${name}`)

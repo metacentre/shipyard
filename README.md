@@ -138,6 +138,12 @@ With [npm](https://npmjs.org) installed, run
 npm install @metacentre/shipyard
 ```
 
+ssb can host packages with [ssb-npm](https://github.com/hackergrrl/ssb-npm-101)
+
+```shell
+ssb-npm install @metacentre/shipyard
+```
+
 ## Acknowledgments
 
 shipyard was inspired by ssb-server primarily

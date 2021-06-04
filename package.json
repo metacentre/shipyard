@@ -27,11 +27,30 @@
     "ssb-plugins": "^1.0.4"
   },
   "devDependencies": {
+    "@metacentre/shipyard-ssb": "^1.0.0",
     "ava": "^3.15.0",
     "fs-extra": "^10.0.0",
     "rimraf": "^3.0.2",
     "ssb-identities": "^2.1.1",
     "ssb-lan": "^1.0.0"
+  },
+  "peerDependencies": {
+    "ssb-blobs": "2.x",
+    "ssb-ebt": "6.x",
+    "ssb-friends": "4.x",
+    "ssb-gossip": "1.x",
+    "ssb-invite": "2.x",
+    "ssb-links": "3.x",
+    "ssb-local": "1.x",
+    "ssb-logging": "1.x",
+    "ssb-no-auth": "1.x",
+    "ssb-onion": "1.x",
+    "ssb-ooo": "1.x",
+    "ssb-private1": "1.x",
+    "ssb-query": "2.x",
+    "ssb-replicate": "1.x",
+    "ssb-unix-socket": "1.x",
+    "ssb-ws": "6.x"
   },
   "ava": {
     "verbose": true,
