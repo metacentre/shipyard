@@ -8,7 +8,7 @@ Shipyard loads [secret-stack plugins](https://github.com/ssb-js/secret-stack/blo
 
 ## Usage
 
-`const sbot = shipyard(options = {}, { plugins = [], pluginsPath })`
+`const sbot = shipyard(options = {}, { plugins = [], pluginsPath = '' })`
 
 ```js
 const shipyard = require('@metacentre/shipyard')
@@ -128,11 +128,11 @@ To get a minimal, unopinionated ssb server running, only three plugins are loade
 - shipyard plugins argument
 - shipyard pluginsPath argument
 
-Since subsequent plugins are skipped by secret-stack; the above order is also the precedence. First priority is given to existing plugins defined by the user in config. Lowest priority is given to plugins loaded from a single directory.
+Since subsequent plugins that have already been loaded are skipped by secret-stack; the above order is also the precedence. First priority is given to existing plugins defined by the user in config. Lowest priority is given to plugins loaded from a single directory.
 
 ## Install
 
-With [npm](https://npmjs.org/) installed, run
+With [npm](https://npmjs.org) installed, run
 
 ```shell
 npm install @metacentre/shipyard
@@ -146,6 +146,8 @@ shipyard was inspired by ssb-server primarily
 
 - [`noffle/common-readme`](https://github.com/noffle/common-readme)
 - [`ssbc/ssb-server`](https://github.com/ssbc/ssb-server)
+- [`secure scuttlebutt`](https://scuttlebot.io/more/protocols/secure-scuttlebutt.html)
+- [`ssb whitepaper in 4 minutes (archived)`](http://web.archive.org/web/20190716152343/https://infourminutes.co/whitepaper/scuttlebutt)
 
 ## License
 
