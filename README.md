@@ -130,7 +130,62 @@ To get a minimal, unopinionated ssb server running, only three plugins are loade
 
 Since subsequent plugins that have already been loaded are skipped by secret-stack; the above order is also the precedence. First priority is given to existing plugins defined by the user in config. Lowest priority is given to plugins loaded from a single directory.
 
-## Install
+### Leniency loading plugins
+
+Pass the list of plugins you want to be lenient with when loading. Otherwise some plugins will not load. Why? Shipyard checks the shape of plugins to ensure they are:
+
+```js
+{
+  name: '',
+  version: '',
+  manifest: {},
+  init: () =>
+}
+```
+
+However some plugins such as `ssb-unix-socket` are not of the standard shape. Some are missing the manifest because they don't add methods to the RPC. Some are not even objects; they're functions. These ssb-server plugins are well established and work well so we don't want to skip loading them, so instead we pass the list of plugins to be lenient when loading them.
+
+Pass the list of plugins to shipyard to load along with a list of plugins to be lenient with.
+
+```js
+const shipyard = require('@metacentre/shipyard')
+const ssbPlugins = require('a-list-of-plugins')
+const lenientList = require('a-list-of-plugins/lenient')
+
+const sbot = shipyard(
+  {},
+  {
+    plugins: ssbPlugins,
+    lenient: lenientList
+  }
+)
+```
+
+### Lenient list names
+
+Loading plugins by their package npm name such as `ssb-unix-socket` we supply that name to the list. However if we pass `require('ssb-unix-socket')` to `shipyard` we need to check the plugin name which is `unix-socket`. Notice the lenient list has both names for each plugin that needs leniency.
+
+## Make shipyard the same as ssb-server
+
+ssb-server bundles many plugins. Load shipyard like this to load the same plugins in the same order:
+
+```js
+const shipyard = require('@metacentre/shipyard')
+const ssbServerPlugins = require('@metacentre/shipyard-ssb')
+const lenientList = require('@metacentre/shipyard-ssb/lenient')
+
+const sbot = shipyard(
+  {},
+  {
+    plugins: ssbServerPlugins,
+    lenient: lenientList
+  }
+)
+```
+
+Of course you can add further plugins to the array to augment ssb-server functionality. Be sure to pass a flattened array to `lenient`.
+
+## Installation
 
 With [npm](https://npmjs.org) installed, run
 
@@ -138,7 +193,7 @@ With [npm](https://npmjs.org) installed, run
 npm install @metacentre/shipyard
 ```
 
-ssb can host packages with [ssb-npm](https://github.com/hackergrrl/ssb-npm-101)
+Alternatively ssb can host packages with [ssb-npm](https://github.com/hackergrrl/ssb-npm-101)
 
 ```shell
 ssb-npm install @metacentre/shipyard
