@@ -40,8 +40,8 @@ const shipyard = require('@metacentre/shipyard')
 const sbot = shipyard({
   appname: 'ssb-shipyard',
   caps: {
-    shs: 'MVZDyNf1TrZuGv3W5Dpef0vaITW1UqOUO3aWLNBp+7A=',
-    sign: 'qym3eJKBjm0E0OIjuh3O1VX8+lLVSGV2p5UzrMStHTs='
+    shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
+    sign: 'mH1wBje2HmVQgG6yXxkwrUTqseLOwgDEnq2IPJJYX0I='
   }
 })
 ```
@@ -163,7 +163,7 @@ const sbot = shipyard(
 
 ### Lenient list names
 
-Loading plugins by their package npm name such as `ssb-unix-socket` we supply that name to the list. However if we pass `require('ssb-unix-socket')` to `shipyard` we need to check the plugin name which is `unix-socket`. Notice the lenient list has both names for each plugin that needs leniency.
+When loading plugins by their npm package name such as `ssb-unix-socket` we supply that name to the list. However if we pass `require('ssb-unix-socket')` to `shipyard` we need to check the secret-stack plugin name which is `unix-socket`. Notice the lenient list exported at [@metacentre/shipyard-ssb/lenient](https://github.com/metacentre/shipyard-ssb/blob/master/lenient.js) has both names for each plugin that needs leniency (`ssb-unix-socket` and `unix-socket` etc).
 
 ## Make shipyard the same as ssb-server
 

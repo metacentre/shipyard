@@ -5,12 +5,12 @@ test.serial('4. creates stack with custom options', t => {
   const sbot = createSsbServer({
     appname: 'ssb-shipyard-test2',
     caps: {
-      shs: 'MVZDyNf1TrZuGv3W5Dpef0vaITW1UqOUO3aWLNBp+7A=',
-      sign: 'qym3eJKBjm0E0OIjuh3O1VX8+lLVSGV2p5UzrMStHTs='
+      shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
+      sign: 'mH1wBje2HmVQgG6yXxkwrUTqseLOwgDEnq2IPJJYX0I='
     }
   })
   t.true(
-    sbot.config.caps.shs === 'MVZDyNf1TrZuGv3W5Dpef0vaITW1UqOUO3aWLNBp+7A='
+    sbot.config.caps.shs === 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0='
   )
   sbot.close()
 })

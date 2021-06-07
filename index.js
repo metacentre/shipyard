@@ -49,6 +49,7 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
     JSON.stringify(server.getManifest(), null, 2)
   )
 
+  global.sbot = server
   return server
 }
 

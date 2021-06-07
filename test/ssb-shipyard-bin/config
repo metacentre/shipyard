@@ -1,17 +1,10 @@
 {
-  "plugins": {
-    "@metacentre/test": "test"
-  },
   "shipyard": {
     "pluginsPath": null,
     "packages": [
       {
         "plugins": "@metacentre/shipyard-ssb",
         "lenient": "@metacentre/shipyard-ssb/lenient"
-      },
-      {
-        "plugins": "@metacentre/shipyard-oasis",
-        "lenient": "@metacentre/shipyard-oasis/lenient"
       }
     ]
   },

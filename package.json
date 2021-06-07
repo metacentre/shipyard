@@ -1,6 +1,6 @@
 {
   "name": "@metacentre/shipyard",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "metacentre stack building",
   "main": "index.js",
   "scripts": {
@@ -8,6 +8,9 @@
     "pretest": "node test/utils/setup-test",
     "posttest": "node test/utils/cleanup",
     "test:watch": "ava --watch"
+  },
+  "bin": {
+    "shipyard": "./bin.js"
   },
   "keywords": [
     "p2p",
@@ -27,10 +30,12 @@
     "ssb-plugins": "^1.0.4"
   },
   "devDependencies": {
+    "@metacentre/shipyard-oasis": "^1.0.5",
     "@metacentre/shipyard-ssb": "^1.0.1",
     "ava": "^3.15.0",
     "fs-extra": "^10.0.0",
     "rimraf": "^3.0.2",
+    "ssb-client": "^4.9.0",
     "ssb-identities": "^2.1.1",
     "ssb-lan": "^1.0.0"
   },
