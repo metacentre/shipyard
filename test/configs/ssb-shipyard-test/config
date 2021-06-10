@@ -3,7 +3,6 @@
     "@metacentre/test": "test"
   },
   "shipyard": {
-    "pluginsPath": null,
     "packages": [
       {
         "plugins": "@metacentre/shipyard-ssb",

@@ -100,11 +100,7 @@ function loadPlugin(stack, pluginName, lenientList) {
           plugin
         )
     } catch (error) {
-      console.error(
-        "Can't load this plugin. It may not be a plugin anyway...",
-        pluginName,
-        error
-      )
+      console.error('Error loading this plugin: ', pluginName, error)
     }
   }
 }

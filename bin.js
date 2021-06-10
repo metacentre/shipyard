@@ -28,7 +28,6 @@
 
 const shipyard = require('./index.js')
 const Config = require('ssb-config/inject')
-const pkg = require('./package.json')
 
 const shipyardTest = process.env.shipyard_test
 if (shipyardTest) process.argv = ['', '', shipyardTest, '--global=true']
