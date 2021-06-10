@@ -44,14 +44,20 @@ const shipyardConfig = config.shipyard
 if (shipyardConfig) {
   const { pluginsPath, packages } = shipyardConfig
 
-  const pkgs = packages.reduce((acc, pkg) => {
-    const plugins = acc.plugins || []
-    const lenient = acc.lenient || []
-    return {
-      plugins: [...plugins, require(pkg.plugins)],
-      lenient: [...lenient, ...require(pkg.lenient)]
-    }
-  }, {})
+  let pkgs = {}
+  if (packages) {
+    pkgs = packages.reduce(
+      (acc, pkg) => {
+        const p = pkg.plugins ? [require(pkg.plugins)] : acc.plugins
+        const l = pkg.lenient ? [...require(pkg.lenient)] : acc.lenient
+        return {
+          plugins: [...acc.plugins, ...p],
+          lenient: [...acc.lenient, ...l]
+        }
+      },
+      { plugins: [], lenient: [] }
+    )
+  }
 
   const { plugins, lenient } = pkgs
   shipyard({ appname }, { plugins, lenient, pluginsPath, attachGlobal })

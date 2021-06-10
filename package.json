@@ -44,7 +44,7 @@
     "concurrency": 1,
     "files": [
       "test/**/*",
-      "!test/ssb-shipyard",
+      "!test/configs",
       "!test/cleanup.js",
       "!test/utils"
     ]

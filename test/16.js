@@ -1,11 +1,11 @@
 const test = require('ava')
-const createSsbServer = require('..')
+const shipyard = require('..')
 const client = require('ssb-client')
 
 test('16. can connect to sbot with ssb-client', async t => {
   return new Promise((resolve, reject) => {
     const config = {
-      appname: 'ssb-shipyard-test12',
+      appname: 'ssb-shipyard-test16',
       caps: {
         shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
         sign: 'mH1wBje2HmVQgG6yXxkwrUTqseLOwgDEnq2IPJJYX0I='
@@ -21,15 +21,13 @@ test('16. can connect to sbot with ssb-client', async t => {
         'ws://localhost:8989~shs:oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0='
     }
 
-    const sbot = createSsbServer(config, {
+    const sbot = shipyard(config, {
       plugins: ['ssb-ws']
     })
 
     sbot.on('multiserver:listening', () => {
       client(config.keys, config, async (error, rpc) => {
         if (error) reject(error)
-        const whoami = await rpc.whoami()
-        console.log('whoami', whoami)
       })
     })
 

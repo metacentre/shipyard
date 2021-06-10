@@ -1,5 +1,5 @@
 const test = require('ava')
-const createSsbServer = require('..')
+const shipyard = require('..')
 
 test.serial(
   '13. creates stack and loads ssb-server plugins without being lenient with ssb-onion',
@@ -17,13 +17,11 @@ test.serial(
       'ssb-logging',
       'logging'
     ]
-    const sbot = createSsbServer(
-      { appname: 'ssb-shipyard-test9' },
+    const sbot = shipyard(
+      { appname: 'ssb-shipyard-test13' },
       { plugins: ssbServerPlugins, lenient: lenientList }
     )
 
-    t.true(sbot.config.appname === 'ssb-shipyard-test9')
-    t.truthy(sbot.ooo.get)
     t.false(sbot.hasOwnProperty('onion')) // sbot.onion = undefined when plugin loaded. absent otherwise
     sbot.close()
   }

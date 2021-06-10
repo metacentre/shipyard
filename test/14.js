@@ -1,5 +1,5 @@
 const test = require('ava')
-const createSsbServer = require('..')
+const shipyard = require('..')
 
 test.serial(
   "14. creates stack and loads require'd ssb-server plugins being lenient with plugin shape",
@@ -24,11 +24,11 @@ test.serial(
       require('ssb-ebt'),
       require('ssb-ooo')
     ]
-    const sbot = createSsbServer(
-      { appname: 'ssb-shipyard-test10' },
+    const sbot = shipyard(
+      { appname: 'ssb-shipyard-test14' },
       { plugins: ssbServerPlugins, lenient: lenientList }
     )
-    t.true(sbot.config.appname === 'ssb-shipyard-test10')
+
     t.true(sbot.hasOwnProperty('getVectorClock')) // ssb-db
     t.true(sbot.hasOwnProperty('plugins'))
     t.true(sbot.hasOwnProperty('private1'))

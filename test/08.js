@@ -1,18 +1,18 @@
 const test = require('ava')
-const createSsbServer = require('..')
+const shipyard = require('..')
 const { join } = require('path')
 
 test.serial(
   "8. creates stack and loads plugins array of npm package names require'd from module",
   t => {
-    const pluginsModule = join(__dirname, 'ssb-shipyard/node_modules/plugins')
+    const pluginsModule = join(
+      __dirname,
+      'configs',
+      'ssb-shipyard-test/node_modules/plugins'
+    )
     const { npm } = require(pluginsModule)
 
-    const sbot = createSsbServer(
-      { appname: 'ssb-shipyard-test5' },
-      { plugins: npm }
-    )
-    t.true(sbot.config.appname === 'ssb-shipyard-test5')
+    const sbot = shipyard({ appname: 'ssb-shipyard-test8' }, { plugins: npm })
     t.truthy(sbot.identities.publishAs)
     sbot.close()
   }

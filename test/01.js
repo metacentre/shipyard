@@ -1,8 +1,9 @@
 const test = require('ava')
-const createSsbServer = require('..')
+const shipyard = require('..')
 
 test.serial('1. creates a default secret-stack', t => {
-  const sbot = createSsbServer()
+  process.env.ssb_appname = 'shipyard-test1'
+  const sbot = shipyard()
 
   t.truthy(sbot)
   t.truthy(sbot.version)

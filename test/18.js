@@ -3,9 +3,9 @@ const client = require('ssb-client')
 
 require('./utils/setup-test')
 
-test('18. can run sbot from ./bin.js and load plugins with shipyard config in ~/.ssb-shipyard/config', async t => {
+test('18. can run sbot from ./bin.js and load plugins with shipyard config in ~/.ssb-shipyard-test/config', async t => {
   return new Promise((resolve, reject) => {
-    const appname = 'ssb-shipyard'
+    const appname = 'ssb-shipyard-test'
     const clientConfig = {
       appname,
       caps: {
@@ -37,7 +37,7 @@ test('18. can run sbot from ./bin.js and load plugins with shipyard config in ~/
 
     global.sbot.on('rpc:connect', rpc => {
       t.truthy(rpc)
-      resolve(t.false(global.sbot?.tunnel?.isRoom === undefined))
+      resolve(t.true(sbot.hasOwnProperty('tangle')))
       global.sbot.close()
     })
   })

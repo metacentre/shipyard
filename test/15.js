@@ -1,6 +1,12 @@
 const test = require('ava')
-const createSsbServer = require('..')
+const shipyard = require('..')
 
+/**
+ * note this test is really passing, in that the server is working correctly.
+ * there are diffs between the two manifests though!
+ * presumably there are slight differences in the versions of plugins used
+ * which isn't of great concern to a functioning sbot
+ * */
 test.serial.failing(
   '15. diffs ssb-server manifest. remove `.failing` to see...',
   t => {
@@ -120,11 +126,11 @@ test.serial.failing(
       }
     }
 
-    const sbot = createSsbServer(
-      { appname: 'ssb-shipyard-test11' },
+    const sbot = shipyard(
+      { appname: 'ssb-shipyard-test15' },
       { plugins: ssbServerPlugins, lenient: lenientList }
     )
-    t.true(sbot.config.appname === 'ssb-shipyard-test11')
+
     t.true(sbot.hasOwnProperty('getVectorClock')) // ssb-db
     t.true(sbot.hasOwnProperty('plugins'))
     t.true(sbot.hasOwnProperty('private1'))

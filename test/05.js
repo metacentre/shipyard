@@ -1,11 +1,10 @@
 const test = require('ava')
-const createSsbServer = require('..')
+const shipyard = require('..')
 
 require('./utils/setup-test')
 
 test.serial('5. creates stack and loads user plugins', t => {
-  const sbot = createSsbServer({ appname: 'ssb-shipyard' })
-  t.true(sbot.config.appname === 'ssb-shipyard')
+  const sbot = shipyard({ appname: 'ssb-shipyard-test' })
   t.truthy(sbot.test.test)
   t.true(sbot.test.test() === 'loaded')
   sbot.close()

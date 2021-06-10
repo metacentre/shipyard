@@ -3,10 +3,10 @@ const home = require('os').homedir()
 const { join } = require('path')
 const fse = require('fs-extra')
 
-const path = join(home, '.ssb-shipyard-bin')
+const path = join(home, '.ssb-shipyard-test-bin')
 rimraf.sync(path)
 
-const src = '/home/av8ta/metacentre/shipyard/test/ssb-shipyard-bin'
+const src = join(__dirname, '../configs/ssb-shipyard-test-bin')
 
 try {
   fse.copySync(src, path)

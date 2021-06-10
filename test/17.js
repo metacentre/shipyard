@@ -4,9 +4,10 @@ const client = require('ssb-client')
 require('./utils/setup-test')
 
 test('17. can run sbot from ./bin.js and connect with ssb-client', async t => {
+  const appname = 'ssb-shipyard-test'
   return new Promise((resolve, reject) => {
     const clientConfig = {
-      appname: 'ssb-shipyard',
+      appname,
       caps: {
         shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
         sign: 'mH1wBje2HmVQgG6yXxkwrUTqseLOwgDEnq2IPJJYX0I='
@@ -25,7 +26,7 @@ test('17. can run sbot from ./bin.js and connect with ssb-client', async t => {
     /** equivalent to passing in
      * $ shipyard ssb-shipyard
      * */
-    process.env.shipyard_test = 'ssb-shipyard'
+    process.env.shipyard_test = appname
     require('../bin')
 
     global.sbot.on('multiserver:listening', () => {
