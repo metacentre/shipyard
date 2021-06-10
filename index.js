@@ -7,7 +7,7 @@ const pkg = require('./package.json')
 const loadPlugin = require('./load-plugin')
 
 // prettier-ignore
-function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } = {}) { 
+function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } = {}) {
   const appname = options.appname || process.env.ssb_appname || 'ssb'
   console.info(`${pkg.name} v${pkg.version}`)
   console.info('creating ssb server with appname: ', appname)
@@ -18,9 +18,13 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
     .use(require('ssb-master'))
     .use(ssbPlugins)
 
-  // load user plugins from ~/.ssb/node_modules
-  // must be configured in ~/.ssb/config or
-  // passed into this function as options
+  /**
+   * https://github.com/ssbc/ssb-plugins#load-user-configured-plugins
+   *
+   * load user plugins from ~/.ssb/node_modules
+   * must be configured in ~/.ssb/config or
+   * passed into shipyard as options
+   */
   ssbPlugins.loadUserPlugins(createStack, config)
 
   // load plugins from array
@@ -49,7 +53,7 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
     JSON.stringify(server.getManifest(), null, 2)
   )
 
-  global.sbot = server
+  global.sbot = process.env.shipyard_test ? server : undefined
   return server
 }
 

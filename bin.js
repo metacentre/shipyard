@@ -37,7 +37,6 @@ const args = process.argv.slice(2)
 const attachGlobal = args[1] === '--global=true'
 
 const appname = process.argv.slice(2)[0] || process.env.ssb_appname || 'ssb'
-console.info(`${pkg.name} v${pkg.version} appname:, ${appname}`)
 const config = Config(appname)
 
 const shipyardConfig = config.shipyard
