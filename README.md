@@ -6,7 +6,7 @@ Secret-stack is an RPC framework where peers are connected and authenticated by 
 
 Shipyard loads [secret-stack plugins](https://github.com/ssb-js/secret-stack/blob/main/PLUGINS.md) from multiple sources and starts the server.
 
-## Usage
+# Usage
 
 `const sbot = shipyard(options = {}, { plugins = [], pluginsPath = '' })`
 
@@ -25,13 +25,27 @@ outputs
 
 Started a server on the default ssb network key. The data directory defaults to `process.env.ssb_appname || 'ssb'`. Standard location in ssb is `~/.ssb`
 
-## Motivation
+# Installation
+
+With [npm](https://npmjs.org) installed, run
+
+```shell
+npm install @metacentre/shipyard
+```
+
+Alternatively ssb can host packages with [ssb-npm](https://github.com/hackergrrl/ssb-npm-101)
+
+```shell
+ssb-npm install @metacentre/shipyard
+```
+
+# Motivation
 
 I want to bundle plugins that go together serving microfrontends. An effort in containing complexity for supporting many apps on ssb.
 
-## API
+# API
 
-### Config
+## Config
 
 Pass in custom ssb config.
 
@@ -50,7 +64,7 @@ Data directory is now `~/.ssb-shipyard`. Alternatively you can set the ssb_appna
 
 Network is the testnet caps, not the main ssb network.
 
-### Plugins
+## Plugins
 
 Load all plugins in a directory. Particularly useful for local development.
 
@@ -116,11 +130,11 @@ const rabbitHole = require(packagePath)
 const sbot = shipyard({}, { plugins: [rabbitHole] })
 ```
 
-### Load user plugins from config
+## Load user plugins from config
 
 User plugins are loaded from `~/.ssb/node_modules` according to config as described in [ssb-plugins](https://github.com/ssbc/ssb-plugins#load-user-configured-plugins).
 
-### Plugin loading order
+## Plugin loading order
 
 To get a minimal, unopinionated ssb server running, only three plugins are loaded by default. `ssb-db`, `ssb-master`, and `ssb-plugins` in that order. Following that plugins are loaded like so:
 
@@ -130,7 +144,7 @@ To get a minimal, unopinionated ssb server running, only three plugins are loade
 
 Since subsequent plugins that have already been loaded are skipped by secret-stack; the above order is also the precedence. First priority is given to existing plugins defined by the user in config. Lowest priority is given to plugins loaded from a single directory.
 
-### Leniency loading plugins
+## Leniency loading plugins
 
 Pass the list of plugins you want to be lenient with when loading. Otherwise some plugins will not load. Why? Shipyard checks the shape of plugins to ensure they are:
 
@@ -161,13 +175,13 @@ const sbot = shipyard(
 )
 ```
 
-### Lenient list names
+## Lenient list names
 
 When loading plugins by their npm package name such as `ssb-unix-socket` we supply that name to the list. However if we pass `require('ssb-unix-socket')` to `shipyard` we need to check the secret-stack plugin name which is `unix-socket`. Notice the lenient list exported at [@metacentre/shipyard-ssb/lenient](https://github.com/metacentre/shipyard-ssb/blob/master/lenient.js) has both names for each plugin that needs leniency (`ssb-unix-socket` and `unix-socket` etc).
 
-## Make shipyard the same as ssb-server
+# Make shipyard the same as ssb-server
 
-ssb-server bundles many plugins. Load shipyard like this to load the same plugins in the same order:
+ssb-server bundles many plugins. Configure shipyard like this to load the same plugins in the same order:
 
 ```js
 const shipyard = require('@metacentre/shipyard')
@@ -183,25 +197,111 @@ const sbot = shipyard(
 )
 ```
 
-Of course you can add further plugins to the array to augment ssb-server functionality. Be sure to pass a flattened array to `lenient`.
+Of course you can add further plugins to the array to augment ssb-server functionality. Be sure to pass a flattened array: `lenient: [...list1, ...list2]`. Plugins load recursively so the plugins array need not be flat.
+
+# Usage as cli tool
+
+```shell
+shipyard
+```
 
 ## Installation
 
-With [npm](https://npmjs.org) installed, run
-
 ```shell
-npm install @metacentre/shipyard
+npm i -g @metacentre/shipyard
 ```
 
-Alternatively ssb can host packages with [ssb-npm](https://github.com/hackergrrl/ssb-npm-101)
+This will start a server using the data directory defined by the env var ssb_appname. If the env var is not set the appname defaults to `ssb` storing data in `~/.ssb` including config in `~/.ssb/config`
+
+## Configuration
+
+Pass in the appname. All configuration comes from `~/.<appname>/config`
 
 ```shell
-ssb-npm install @metacentre/shipyard
+shipyard ssb-test
 ```
 
-## Acknowledgments
+Reads configuration from `~/.ssb-test/config`
 
-shipyard was inspired by ssb-server primarily
+## Config options
+
+- `pluginsPath` absolute path to directory of plugins to load
+- `packages` list of npm packages of plugins to require
+
+```json
+{
+  "shipyard": {
+    "pluginsPath": "/home/av8ta/ssb/plugins",
+    "packages": [
+      {
+        "plugins": "@ssb-org/ssb-plugins",
+        "lenient": "@ssb-org/ssb-plugins/lenient"
+      },
+      {
+        "plugins": "@ssb-org/other-ssb-plugins",
+        "lenient": "@ssb-org/other-ssb-plugins/lenient"
+      }
+    ]
+  }
+}
+```
+
+`packages` are loaded from the first `node_modules` directory nodejs finds when trying to resolve them.
+
+Simplest solution is to install the packages to `~/node_modules` as nodejs will look there and it makes a handy location to centralise your secret-stack plugins.
+
+This way you can install them only once in the home directory and use shipyard with varying config (secret, caps, plugins etc) by simply passing a different appname for each one and setting the config file appropriately for your needs.
+
+## Plugin loading order
+
+The same as when used as a library:
+
+- ssb-plugins user config
+- shipyard packages config
+- shipyard pluginsPath config
+
+The ordering is the same with the cli command because `shipyard.packages` are reduced to an array and passed to `plugins` while `pluginsPath` is passed straight through to the library function.
+
+If you want a different version of a plugin loaded for a certain appname, then install the plugin in the `~/.<appname>/node_modules` directory as per [ssb-plugins](https://github.com/ssbc/ssb-plugins#load-user-configured-plugins). That way the different versioned plugin will load first with the normal version in `~/node_modules` being skipped.
+
+# Run server similar to ssb-server with the cli
+
+```shell
+shipyard
+```
+
+add to: `~/.ssb/config`
+
+```json
+{
+  "shipyard": {
+    "packages": [
+      {
+        "plugins": "@metacentre/shipyard-ssb",
+        "lenient": "@metacentre/shipyard-ssb/lenient"
+      },
+      {
+        "plugins": "@metacentre/shipyard-oasis",
+        "lenient": "@metacentre/shipyard-oasis/lenient"
+      }
+    ]
+  }
+}
+```
+
+Install packages from npm to shared `node_modules` directory in home. shipyard will load them from there. You may want to set up a package.json in your home directory first if you haven't already.
+
+```shell
+cd ~
+npm i @metacentre/shipyard-ssb @metacentre/shipyard-oasis flumedb
+shipyard
+```
+
+This server will also talk to oasis, as it loads oasis plugins after the ssb-server plugins.
+
+# Acknowledgments
+
+shipyard is inspired by ssb-server
 
 ## See Also
 
