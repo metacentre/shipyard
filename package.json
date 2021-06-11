@@ -1,6 +1,6 @@
 {
   "name": "@metacentre/shipyard",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "metacentre stack building",
   "main": "index.js",
   "scripts": {

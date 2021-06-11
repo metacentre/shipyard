@@ -1,11 +1,11 @@
 const test = require('ava')
 const client = require('ssb-client')
 
-require('./utils/setup-test-bin-path')
+require('./utils/setup-test-bin-mfe')
 
-test('20. can run sbot from ./bin.js and load plugins from pluginsPath configured in ~/.ssb-shipyard-test/config', async t => {
+test('21. can run sbot from ./bin.js and load plugins from metacentre microfrontends configured in ~/.ssb-shipyard-test/config', async t => {
   return new Promise((resolve, reject) => {
-    const appname = 'ssb-shipyard-test-bin-path'
+    const appname = 'ssb-shipyard-test-bin-mfe'
     const clientConfig = {
       appname,
       caps: {
@@ -34,7 +34,7 @@ test('20. can run sbot from ./bin.js and load plugins from pluginsPath configure
 
     global.sbot.on('rpc:connect', rpc => {
       t.truthy(rpc)
-      resolve(t.true(global.sbot.test2.test() === 'loaded'))
+      resolve(t.true(global.sbot.test1.test() === 'loaded'))
       global.sbot.close()
     })
   })

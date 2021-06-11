@@ -5,13 +5,13 @@ const fse = require('fs-extra')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 
-const path = join(home, '.ssb-shipyard-test-bin-path')
+const path = join(home, '.ssb-shipyard-test-bin-mfe')
 rimraf.sync(path)
 mkdirp.sync(path)
 
-fs.writeFileSync(join(path, 'config'), config(home))
-
 const src = join(__dirname, '../configs/ssb-shipyard-test-bin-plugins')
+
+fs.writeFileSync(join(path, 'config'), config(home))
 
 try {
   fse.copySync(src, path)
@@ -22,8 +22,20 @@ try {
 
 function config(homeDir) {
   return `{
+  "mfe": {
+    "apps": [
+      {
+        "name": "@metacentre/mf-silly",
+        "activeWhen": ["/silly"],
+        "packages": [
+          {
+            "plugins": "${src}/plugins/plugin1"
+          }
+        ]
+      }     
+    ]
+  },
   "shipyard": {
-    "pluginsPath": "${homeDir}/.ssb-shipyard-test-bin-path/plugins",
     "packages": [
       {
         "plugins": "ssb-ws"

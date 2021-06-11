@@ -35,7 +35,7 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
 
   // load plugins from array
   if (plugins.length > 0) {
-    announce(config, `config.shipyard.packages or shipyard({},{plugins})=>`, `plugins array`)
+    announce(config, `config.shipyard.packages or config.mfe.apps[{packages}] or shipyard({},{plugins})=>`, `plugins array`)
     plugins.forEach(plugin => {
       loadPlugin(createStack, plugin, lenient)
     })
