@@ -28,6 +28,7 @@
 
 const shipyard = require('./index.js')
 const Config = require('ssb-config/inject')
+const debug = require('debug')('shipyard:bin')
 
 const shipyardTest = process.env.shipyard_test
 if (shipyardTest) process.argv = ['', '', shipyardTest, '--global=true']
@@ -43,12 +44,23 @@ const shipyardConfig = config.shipyard
 if (shipyardConfig) {
   const { pluginsPath, packages } = shipyardConfig
 
+  const requireArray = input => {
+    if (Array.isArray(input)) {
+      const result = []
+      input.forEach(p => result.push(require(p)))
+      return result
+    } else return require(input)
+  }
+
   let pkgs = {}
   if (packages) {
+    debug(`Assembling packages to pass to shipyard,`)
+    debug(`from ${config.config} config.shipyard.packages: [{plugins}]`)
     pkgs = packages.reduce(
       (acc, pkg) => {
-        const p = pkg.plugins ? [require(pkg.plugins)] : acc.plugins
+        let p = pkg.plugins ? [requireArray(pkg.plugins)] : acc.plugins
         const l = pkg.lenient ? [...require(pkg.lenient)] : acc.lenient
+        debug(p)
         return {
           plugins: [...acc.plugins, ...p],
           lenient: [...acc.lenient, ...l]

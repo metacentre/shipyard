@@ -22,6 +22,7 @@
   "author": "av8ta",
   "license": "MIT",
   "dependencies": {
+    "debug": "^4.3.1",
     "secret-stack": "^6.4.0",
     "ssb-caps": "^1.1.0",
     "ssb-config": "^3.4.5",

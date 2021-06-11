@@ -5,14 +5,17 @@ const path = require('path')
 const fs = require('fs')
 const pkg = require('./package.json')
 const loadPlugin = require('./load-plugin')
+const debug = require('debug')('shipyard')
+const { announce } = require('./logging')
 
 // prettier-ignore
 function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } = {}) {
   const appname = options.appname || process.env.ssb_appname || 'ssb'
-  console.info(`${pkg.name} v${pkg.version}`)
-  console.info('creating ssb server with appname: ', appname)
 
   const config = Config(appname, { ...options, appname })
+  console.info(`${pkg.name} v${pkg.version} ${appname} ${config.config}`)
+  console.info()
+
   // prettier-ignore
   const createStack = Server
     .use(require('ssb-master'))
@@ -25,10 +28,14 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
    * must be configured in ~/.ssb/config or
    * passed into shipyard as options
    */
-  ssbPlugins.loadUserPlugins(createStack, config)
+  if (config.plugins) {
+    announce(config, `config.plugins`, `${config.path}/node_modules`)
+    ssbPlugins.loadUserPlugins(createStack, config)
+  }
 
   // load plugins from array
   if (plugins.length > 0) {
+    announce(config, `config.shipyard.packages or shipyard({},{plugins})=>`, `plugins array`)
     plugins.forEach(plugin => {
       loadPlugin(createStack, plugin, lenient)
     })
@@ -36,10 +43,11 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
 
   // load plugins from a path
   if (pluginsPath) {
-    console.info(`Loading plugins from ${pluginsPath}`)
+    announce(config, `config.shipyard.pluginsPath`, pluginsPath)
     fs.readdirSync(pluginsPath).map(fileName => {
       if (fileName.startsWith('.')) return
       const pluginPath = path.join(pluginsPath, fileName)
+      debug('Plugin path: ', pluginPath)
       loadPlugin(createStack, pluginPath, lenient)
     })
   }

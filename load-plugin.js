@@ -1,3 +1,5 @@
+const debug = require('debug')('shipyard')
+
 function isString(s) {
   return !!(typeof s === 'string' || s instanceof String)
 }
@@ -92,7 +94,7 @@ function loadPlugin(stack, pluginName, lenientList) {
         // it looks like a plugin and quacks like a plugin
         // or we're being lenient!
         const { name } = plugin
-        console.info(`Loading plugin: ${name}`)
+        debug(`Loading plugin: ${name}`, plugin)
         stack.use(plugin)
       } else
         console.info(
