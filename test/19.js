@@ -23,9 +23,6 @@ test('19. can run sbot from ./bin.js and load plugins with shipyard config in ~/
         'ws://localhost:8989~shs:oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0='
     }
 
-    /** equivalent to passing in
-     * $ shipyard ssb-shipyard
-     * */
     process.env.shipyard_test = appname
     require('../bin')
 
@@ -38,11 +35,7 @@ test('19. can run sbot from ./bin.js and load plugins with shipyard config in ~/
     global.sbot.on('rpc:connect', rpc => {
       console.log(global.sbot.manifest())
       t.truthy(rpc)
-      const result = Promise.resolve(
-        t.false(sbot.hasOwnProperty('tangle')) &&
-          t.true(global.sbot?.tunnel?.isRoom === undefined)
-      )
-      resolve(t.true(!sbot.hasOwnProperty('tangle')))
+      resolve(t.true(!rpc.hasOwnProperty('tangle')))
       global.sbot.close()
     })
   })

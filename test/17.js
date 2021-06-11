@@ -24,7 +24,7 @@ test('17. can run sbot from ./bin.js and connect with ssb-client', async t => {
     }
 
     /** equivalent to passing in
-     * $ shipyard ssb-shipyard
+     * $ shipyard ssb-shipyard-test
      * */
     process.env.shipyard_test = appname
     require('../bin')

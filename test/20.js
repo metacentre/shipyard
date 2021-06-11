@@ -6,7 +6,7 @@ require('./utils/setup-test-bin-path')
 test('20. can run sbot from ./bin.js and load plugins from pluginsPath configured in ~/.ssb-shipyard-test/config', async t => {
   return new Promise((resolve, reject) => {
     const appname = 'ssb-shipyard-test-bin-path'
-    var clientConfig = {
+    const clientConfig = {
       appname,
       caps: {
         shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
@@ -23,29 +23,6 @@ test('20. can run sbot from ./bin.js and load plugins from pluginsPath configure
         'ws://localhost:8989~shs:oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0='
     }
 
-    clientConfig = {
-      appname,
-      shipyard: {
-        pluginsPath: '/home/av8ta/.ssb-shipyard-test-bin-path/plugins'
-      },
-      caps: {
-        shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
-        sign: 'mH1wBje2HmVQgG6yXxkwrUTqseLOwgDEnq2IPJJYX0I='
-      },
-      keys: {
-        curve: 'ed25519',
-        public: 'oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0=.ed25519',
-        private:
-          'fxxkI3cbj3dgzngKVR1aIlsa6hBgq2YgsZATqDlPL/qjJZAhbXg1RVnlU2KS0Vg+wg8PARwf9F7hH1ESkMdafQ==.ed25519',
-        id: '@oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0=.ed25519'
-      },
-      remote:
-        'ws://localhost:8989~shs:oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0='
-    }
-
-    /** equivalent to passing in
-     * $ shipyard ssb-shipyard
-     * */
     process.env.shipyard_test = appname
     require('../bin')
 
@@ -57,7 +34,7 @@ test('20. can run sbot from ./bin.js and load plugins from pluginsPath configure
 
     global.sbot.on('rpc:connect', rpc => {
       t.truthy(rpc)
-      resolve(t.true(sbot.hasOwnProperty('test2')))
+      resolve(t.true(rpc.hasOwnProperty('test2')))
       global.sbot.close()
     })
   })
