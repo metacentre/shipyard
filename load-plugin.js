@@ -51,7 +51,7 @@ function isModuleToRequire(packagePath, lenientList) {
       return { toRequire: true, beLenient: true }
     else return { toRequire: true, beLenient: false }
   } catch (error) {
-    return error
+    throw error
   }
 }
 
