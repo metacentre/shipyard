@@ -47,11 +47,11 @@ const appname = process.argv.slice(2)[0] || process.env.ssb_appname || 'ssb'
 
 /** nuke the commandline args, so that Config() doesn't process them */
 process.argv = []
-const config = Config(appname)
+const config = Config(appname, { appname })
 
 let shipyardConfig = config.shipyard
 
-if (shipyardConfig || config.mfe?.apps.length > 0) {
+if (shipyardConfig || config.mfe?.apps?.length > 0) {
   shipyardConfig = shipyardConfig || {}
   const { pluginsPath = undefined, packages = [] } = shipyardConfig
 

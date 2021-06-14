@@ -11,6 +11,7 @@ const { announce } = require('./logging')
 // prettier-ignore
 function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } = {}) {
   const appname = options.appname || process.env.ssb_appname || 'ssb'
+  process.env.ssb_appname = appname // make git-ssb-web display the correct appname
 
   const config = Config(appname, { ...options, appname })
   console.info(`${pkg.name} v${pkg.version} ${appname} ${config.config}`)
