@@ -33,7 +33,6 @@ test('19. can run sbot from ./bin.js and load plugins with shipyard config in ~/
     })
 
     global.sbot.on('rpc:connect', rpc => {
-      console.log(global.sbot.manifest())
       t.truthy(rpc)
       resolve(t.true(!rpc.hasOwnProperty('tangle')))
       global.sbot.close()

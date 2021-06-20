@@ -79,7 +79,7 @@ if (shipyardConfig || config.mfe?.apps?.length > 0) {
     pkgs = packages.reduce(
       (acc, pkg) => {
         let p = pkg.plugins ? [requireArray(pkg.plugins)] : acc.plugins
-        const l = pkg.lenient ? [...require(pkg.lenient)] : acc.lenient
+        const l = pkg.lenient ? [...requireArray(pkg.lenient)] : acc.lenient
         debug(JSON.stringify(p, null, 2))
         return {
           plugins: [...acc.plugins, ...p],

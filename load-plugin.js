@@ -1,4 +1,7 @@
 const debug = require('debug')('shipyard')
+let index = 0
+let ssbDbLoaded = false
+let isSsbDb = false
 
 function isString(s) {
   return !!(typeof s === 'string' || s instanceof String)
@@ -64,6 +67,7 @@ function requirePlugin(pluginName, lenientList) {
   let plugin
   var beLenient = false
   if (isString(pluginName)) {
+    if (pluginName === 'ssb-db') isSsbDb = true
     var { toRequire, beLenient } = isModuleToRequire(pluginName, lenientList)
     if (toRequire) plugin = require(pluginName)
     else
@@ -72,7 +76,30 @@ function requirePlugin(pluginName, lenientList) {
       )
   } else {
     if (lenientList) {
+      /**
+       * todo: if there is no name present we can't check it
+       * find the resolved module path instead and look at that
+       * e.g. ssb-db doesn't have a name. so to load it, we must have it in lenien list
+       * and pass it as a string 'ssb-db' to load, not require('ssb-db')
+       * */
       const { name } = pluginName
+
+      /**
+       * nasty hack!
+       * if the module has previously been require'd and has no name to check
+       * we can't determine if it's in the lenient list!
+       * this stops both ssb-db and ssb-master from loading which are absolutely essential
+       * we provide more leniency if it's one of the first two plugins to load
+       * which they ought to be...
+       * first test is for ssb-db, second for ssb-master
+       * */
+      if (!name && index < 3) {
+        if (pluginName.init && isFunction(pluginName.init)) {
+          if (pluginName.manifest?.getVectorClock) {
+            isSsbDb = true
+          }
+        } else if (isFunction(pluginName)) beLenient = true
+      }
       if (inLenientList(lenientList, name)) beLenient = true
     }
     plugin = pluginName
@@ -81,6 +108,7 @@ function requirePlugin(pluginName, lenientList) {
 }
 
 function loadPlugin(stack, pluginName, lenientList) {
+  index++
   /** recursively load plugins */
   if (Array.isArray(pluginName)) {
     pluginName.forEach(p => loadPlugin(stack, p, lenientList))
@@ -95,12 +123,23 @@ function loadPlugin(stack, pluginName, lenientList) {
         // or we're being lenient!
         const { name } = plugin
         debug(`Loading plugin: ${name}`, plugin)
-        stack.use(plugin)
+
+        /**
+         * hack to only try to load ssb-db once
+         * otherwise we error on the flume log lock
+         * todo: deduplicate the plugins list before loading them
+         * */
+        if (!isSsbDb) stack.use(plugin)
+        else if (!ssbDbLoaded) {
+          stack.use(plugin)
+          ssbDbLoaded = true
+        }
       } else
         console.info(
           "Skipping plugin because it doesn't quack like a plugin: ",
           plugin
         )
+      isSsbDb = false
     } catch (error) {
       console.error('Error loading this plugin: ', pluginName, error)
     }

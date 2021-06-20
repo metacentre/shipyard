@@ -12,7 +12,10 @@ test.serial(
     )
     const { plugins } = require(pluginsModule)
 
-    const sbot = shipyard({ appname: 'ssb-shipyard-test9' }, { plugins })
+    const sbot = shipyard(
+      { appname: 'ssb-shipyard-test9' },
+      { plugins, lenient: ['ssb-db', 'ssb-master'] }
+    )
     t.truthy(sbot.identities.publishAs)
     sbot.close()
   }

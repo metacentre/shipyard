@@ -15,7 +15,7 @@ test.serial(
 
     const sbot = shipyard(
       { appname: 'ssb-shipyard-test10' },
-      { plugins: arrays }
+      { plugins: arrays, lenient: ['ssb-db', 'ssb-master'] }
     )
     t.truthy(sbot.identities.publishAs)
     t.truthy(sbot.lan.start)

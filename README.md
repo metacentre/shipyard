@@ -12,7 +12,7 @@ Shipyard loads [secret-stack plugins](https://github.com/ssb-js/secret-stack/blo
 
 ```js
 const shipyard = require('@metacentre/shipyard')
-const sbot = shipyard()
+const sbot = shipyard({}, plugins: ['ssb-db', 'ssb-master'])
 
 console.log(sbot.whoami())
 ```
@@ -24,6 +24,10 @@ outputs
 ```
 
 Started a server on the default ssb network key. The data directory defaults to `process.env.ssb_appname || 'ssb'`. Standard location in ssb is `~/.ssb`
+
+# Minimum plugins required
+
+If you're running an ssb server with shipyard the first two plugins you pass _*must*_ be `ssb-db` and `ssb-master`. Previously shipyard loaded them both by default, however to enable any secret-stack to be built, not necessarily ssb, they were removed. This also means shipyard can now use `ssb-db2` instead of `ssb-db`.
 
 # Installation
 
@@ -51,13 +55,16 @@ Pass in custom ssb config.
 
 ```js
 const shipyard = require('@metacentre/shipyard')
-const sbot = shipyard({
-  appname: 'ssb-shipyard',
-  caps: {
-    shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
-    sign: 'mH1wBje2HmVQgG6yXxkwrUTqseLOwgDEnq2IPJJYX0I='
-  }
-})
+const sbot = shipyard(
+  {
+    appname: 'ssb-shipyard',
+    caps: {
+      shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
+      sign: 'mH1wBje2HmVQgG6yXxkwrUTqseLOwgDEnq2IPJJYX0I='
+    }
+  },
+  { plugins: ['your-plugins'] }
+)
 ```
 
 Data directory is now `~/.ssb-shipyard`. Alternatively you can set the ssb_appname env var before running the server `ssb_appname=ssb-shipyard`. Precedence is `config.appname` or `process.env.ssb_appname`. `'ssb'` is used if neither of the first two are set.
@@ -136,7 +143,7 @@ User plugins are loaded from `~/.ssb/node_modules` according to config as descri
 
 ## Plugin loading order
 
-To get a minimal, unopinionated ssb server running, only three plugins are loaded by default. `ssb-db`, `ssb-master`, and `ssb-plugins` in that order. Following that plugins are loaded like so:
+To get a minimal, unopinionated secret-stack server running, only `ssb-plugins` is loaded by default. Following that plugins are loaded like so:
 
 - user plugins from config
 - shipyard plugins argument
@@ -174,6 +181,8 @@ const sbot = shipyard(
   }
 )
 ```
+
+If you're building your own secret-stack rather than an ssb stack it's recommended to write plugins of the standard object shape described above. If you do this you won't need to use a lenient list at all.
 
 ## Lenient list names
 

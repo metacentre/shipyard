@@ -26,7 +26,8 @@ function config(homeDir) {
     "pluginsPath": "${homeDir}/.ssb-shipyard-test-bin-path/plugins",
     "packages": [
       {
-        "plugins": "ssb-ws"
+        "plugins": ["ssb-db", "ssb-master", "ssb-ws"],
+        "lenient": ["ssb-db", "ssb-master"]
       }
     ]
   },

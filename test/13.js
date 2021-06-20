@@ -6,6 +6,8 @@ test.serial(
   t => {
     const ssbServerPlugins = require('@metacentre/shipyard-ssb')
     const lenientList = [
+      'ssb-db',
+      'ssb-master',
       // 'ssb-onion',
       // 'onion',
       'ssb-unix-socket',

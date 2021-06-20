@@ -19,7 +19,7 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
 
   // prettier-ignore
   const createStack = Server
-    .use(require('ssb-master'))
+    // .use(require('ssb-master'))
     .use(ssbPlugins)
 
   /**

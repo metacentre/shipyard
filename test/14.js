@@ -7,6 +7,8 @@ test.serial(
     const lenientList = require('@metacentre/shipyard-ssb/lenient')
 
     const ssbServerPlugins = [
+      'ssb-db',
+      'ssb-master',
       require('ssb-private1'),
       require('ssb-onion'),
       require('ssb-unix-socket'),

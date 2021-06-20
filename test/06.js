@@ -9,9 +9,11 @@ test.serial('6. creates stack and loads plugins from array', t => {
     'ssb-shipyard-test/node_modules/@metacentre/test'
   )
 
+  const plugins = ['ssb-db', 'ssb-master']
+
   const sbot = shipyard(
     { appname: 'ssb-shipyard-test-6' },
-    { plugins: ['ssb-identities', path] }
+    { plugins: [...plugins, 'ssb-identities', path], lenient: plugins }
   )
   t.truthy(sbot.identities.publishAs)
   t.truthy(sbot.test.test)

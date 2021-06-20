@@ -1,6 +1,6 @@
 {
   "name": "@metacentre/shipyard",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "metacentre stack building",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,8 @@
   "keywords": [
     "p2p",
     "ssb",
+    "ssb-db",
+    "ssb-db2",
     "metacentre",
     "secret-stack",
     "secure-scuttlebutt"
@@ -31,8 +33,8 @@
     "ssb-plugins": "^1.0.4"
   },
   "devDependencies": {
-    "@metacentre/shipyard-oasis": "^1.0.5",
-    "@metacentre/shipyard-ssb": "^1.0.1",
+    "@metacentre/shipyard-oasis": "^1.0.6",
+    "@metacentre/shipyard-ssb": "^1.0.2",
     "ava": "^3.15.0",
     "fs-extra": "^10.0.0",
     "rimraf": "^3.0.2",

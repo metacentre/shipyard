@@ -15,7 +15,10 @@ test.serial(
 
     const sbot = shipyard(
       { appname: 'ssb-shipyard-test11' },
-      { plugins: rabbitHole }
+      {
+        plugins: rabbitHole,
+        lenient: require('@metacentre/shipyard-ssb/lenient')
+      }
     )
     t.truthy(sbot.identities.publishAs)
     t.truthy(sbot.lan.start)
