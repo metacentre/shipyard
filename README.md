@@ -12,7 +12,11 @@ Shipyard loads [secret-stack plugins](https://github.com/ssb-js/secret-stack/blo
 
 ```js
 const shipyard = require('@metacentre/shipyard')
-const sbot = shipyard({}, plugins: ['ssb-db', 'ssb-master'])
+
+const sbot = shipyard(
+  { appname: 'shipyard-test' },
+  { plugins: ['ssb-db', 'ssb-master'], lenient: ['ssb-db', 'ssb-master'] }
+)
 
 console.log(sbot.whoami())
 ```
