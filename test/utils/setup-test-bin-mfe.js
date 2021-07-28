@@ -38,8 +38,7 @@ function config(homeDir) {
   "shipyard": {
     "packages": [
       {
-        "plugins": ["ssb-db", "ssb-master", "ssb-ws"],
-        "lenient": ["ssb-db", "ssb-master"]
+        "plugins": ["ssb-db", "ssb-master", "ssb-ws"]
       }
     ]
   },

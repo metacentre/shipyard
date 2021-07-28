@@ -15,7 +15,7 @@ const shipyard = require('@metacentre/shipyard')
 
 const sbot = shipyard(
   { appname: 'shipyard-test' },
-  { plugins: ['ssb-db', 'ssb-master'], lenient: ['ssb-db', 'ssb-master'] }
+  { plugins: ['ssb-db', 'ssb-master'] }
 )
 
 console.log(sbot.whoami())
@@ -155,43 +155,6 @@ To get a minimal, unopinionated secret-stack server running, only `ssb-plugins` 
 
 Since subsequent plugins that have already been loaded are skipped by secret-stack; the above order is also the precedence. First priority is given to existing plugins defined by the user in config. Lowest priority is given to plugins loaded from a single directory.
 
-## Leniency loading plugins
-
-Pass the list of plugins you want to be lenient with when loading. Otherwise some plugins will not load. Why? Shipyard checks the shape of plugins to ensure they are:
-
-```js
-{
-  name: '',
-  version: '',
-  manifest: {},
-  init: () =>
-}
-```
-
-However some plugins such as `ssb-unix-socket` are not of the standard shape. Some are missing the manifest because they don't add methods to the RPC. Some are not even objects; they're functions. These ssb-server plugins are well established and work well so we don't want to skip loading them, so instead we pass the list of plugins to be lenient when loading them.
-
-Pass the list of plugins to shipyard to load along with a list of plugins to be lenient with.
-
-```js
-const shipyard = require('@metacentre/shipyard')
-const ssbPlugins = require('a-list-of-plugins')
-const lenientList = require('a-list-of-plugins/lenient')
-
-const sbot = shipyard(
-  {},
-  {
-    plugins: ssbPlugins,
-    lenient: lenientList
-  }
-)
-```
-
-If you're building your own secret-stack rather than an ssb stack it's recommended to write plugins of the standard object shape described above. If you do this you won't need to use a lenient list at all.
-
-## Lenient list names
-
-When loading plugins by their npm package name such as `ssb-unix-socket` we supply that name to the list. However if we pass `require('ssb-unix-socket')` to `shipyard` we need to check the secret-stack plugin name which is `unix-socket`. Notice the lenient list exported at [@metacentre/shipyard-ssb/lenient](https://github.com/metacentre/shipyard-ssb/blob/master/lenient.js) has both names for each plugin that needs leniency (`ssb-unix-socket` and `unix-socket` etc).
-
 # Make shipyard the same as ssb-server
 
 ssb-server bundles many plugins. Configure shipyard like this to load the same plugins in the same order:
@@ -199,18 +162,11 @@ ssb-server bundles many plugins. Configure shipyard like this to load the same p
 ```js
 const shipyard = require('@metacentre/shipyard')
 const ssbServerPlugins = require('@metacentre/shipyard-ssb')
-const lenientList = require('@metacentre/shipyard-ssb/lenient')
 
-const sbot = shipyard(
-  {},
-  {
-    plugins: ssbServerPlugins,
-    lenient: lenientList
-  }
-)
+const sbot = shipyard({}, { plugins: ssbServerPlugins })
 ```
 
-Of course you can add further plugins to the array to augment ssb-server functionality. Be sure to pass a flattened array: `lenient: [...list1, ...list2]`. Plugins load recursively so the plugins array need not be flat.
+Of course you can add further plugins to the array to augment ssb-server functionality. Plugins load recursively so the plugins array need not be flat.
 
 # Usage as cli tool
 
@@ -234,9 +190,9 @@ Pass in the appname. All configuration comes from `~/.<appname>/config`
 shipyard ssb-test
 ```
 
-Reads configuration from `~/.ssb-test/config`
-
 ## Config options
+
+Reads configuration from `~/.ssb-test/config`
 
 - `pluginsPath` absolute path to directory of plugins to load
 - `packages` list of npm packages of plugins to require
@@ -247,12 +203,10 @@ Reads configuration from `~/.ssb-test/config`
     "pluginsPath": "/home/av8ta/ssb/plugins",
     "packages": [
       {
-        "plugins": "@ssb-org/ssb-plugins",
-        "lenient": "@ssb-org/ssb-plugins/lenient"
+        "plugins": "@ssb-org/ssb-plugins"
       },
       {
-        "plugins": "@ssb-org/other-ssb-plugins",
-        "lenient": "@ssb-org/other-ssb-plugins/lenient"
+        "plugins": "@ssb-org/other-ssb-plugins"
       }
     ]
   }
@@ -290,12 +244,10 @@ add to: `~/.ssb/config`
   "shipyard": {
     "packages": [
       {
-        "plugins": "@metacentre/shipyard-ssb",
-        "lenient": "@metacentre/shipyard-ssb/lenient"
+        "plugins": "@metacentre/shipyard-ssb"
       },
       {
-        "plugins": "@metacentre/shipyard-oasis",
-        "lenient": "@metacentre/shipyard-oasis/lenient"
+        "plugins": "@metacentre/shipyard-oasis"
       }
     ]
   }
@@ -311,6 +263,23 @@ shipyard
 ```
 
 This server will also talk to oasis, as it loads oasis plugins after the ssb-server plugins.
+
+# Usage alongside ssb-server
+
+I use shipyard to bootstrap a server. Then ssb-server is handy for its ability to connect with ssb-client and run commands. So the two go hand in hand.
+
+Start the server
+
+```shell
+shipyard ssb-test
+```
+
+In another shell, run commands with ssb-server
+
+```shell
+export ssb_appname=ssb-test
+ssb-server whoami
+```
 
 # Acknowledgments
 

@@ -2,8 +2,7 @@
   "shipyard": {
     "packages": [
       {
-        "plugins": "@metacentre/shipyard-ssb",
-        "lenient": "@metacentre/shipyard-ssb/lenient"
+        "plugins": ["ssb-db", "ssb-master", "ssb-ws"]
       }
     ]
   },

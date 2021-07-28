@@ -3,7 +3,7 @@ const shipyard = require('..')
 const { join } = require('path')
 
 test.serial(
-  "8. creates stack and loads plugins array of npm package names require'd from module",
+  "creates stack and loads plugins array of npm package names require'd from module",
   t => {
     const pluginsModule = join(
       __dirname,
@@ -12,10 +12,7 @@ test.serial(
     )
     const { npm } = require(pluginsModule)
 
-    const sbot = shipyard(
-      { appname: 'ssb-shipyard-test8' },
-      { plugins: npm, lenient: ['ssb-db', 'ssb-master'] }
-    )
+    const sbot = shipyard({ appname: 'ssb-shipyard-test8' }, { plugins: npm })
     t.truthy(sbot.identities.publishAs)
     sbot.close()
   }

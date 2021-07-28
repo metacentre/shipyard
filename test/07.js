@@ -2,7 +2,7 @@ const test = require('ava')
 const shipyard = require('..')
 const { join } = require('path')
 
-test.serial('7. creates stack and loads plugins from directory', t => {
+test.serial('creates stack and loads plugins from directory', t => {
   const pluginsPath = join(
     __dirname,
     'configs',

@@ -1,164 +1,45 @@
 const test = require('ava')
-const shipyard = require('..')
+const client = require('ssb-client')
 
-/**
- * note this test is really passing, in that the server is working correctly.
- * there are diffs between the two manifests though!
- * presumably there are slight differences in the versions of plugins used
- * which isn't of great concern to a functioning sbot
- * */
-test.serial.failing(
-  '15. diffs ssb-server manifest. remove `.failing` to see...',
-  t => {
-    const lenientList = require('@metacentre/shipyard-ssb/lenient')
-    const ssbServerPlugins = require('@metacentre/shipyard-ssb')
+require('./utils/setup-test')
 
-    const ssbServerManifest_15_3_0 = {
-      auth: 'async',
-      address: 'sync',
-      manifest: 'sync',
-      multiserver: {
-        parse: 'sync',
-        address: 'sync'
+test.serial('can run sbot from ./bin.js and connect with ssb-client', t => {
+  const appname = 'ssb-shipyard-test'
+  return new Promise((resolve, reject) => {
+    const clientConfig = {
+      appname,
+      caps: {
+        shs: 'InRNDNSnLJasGWEPLe7zPAj8kHAgOesoPgczeV3g4Y0=',
+        sign: 'mH1wBje2HmVQgG6yXxkwrUTqseLOwgDEnq2IPJJYX0I='
       },
-      multiserverNet: {},
-      get: 'async',
-      createFeedStream: 'source',
-      createLogStream: 'source',
-      messagesByType: 'source',
-      createHistoryStream: 'source',
-      createUserStream: 'source',
-      createWriteStream: 'sink',
-      links: 'source',
-      add: 'async',
-      publish: 'async',
-      getAddress: 'sync',
-      getLatest: 'async',
-      latest: 'source',
-      latestSequence: 'async',
-      whoami: 'sync',
-      progress: 'sync',
-      status: 'sync',
-      getVectorClock: 'async',
-      version: 'sync',
-      help: 'sync',
-      seq: 'async',
-      usage: 'sync',
-      clock: 'async',
-      plugins: {
-        install: 'source',
-        uninstall: 'source',
-        enable: 'async',
-        disable: 'async',
-        help: 'sync'
+      keys: {
+        curve: 'ed25519',
+        public: 'oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0=.ed25519',
+        private:
+          'fxxkI3cbj3dgzngKVR1aIlsa6hBgq2YgsZATqDlPL/qjJZAhbXg1RVnlU2KS0Vg+wg8PARwf9F7hH1ESkMdafQ==.ed25519',
+        id: '@oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0=.ed25519'
       },
-      gossip: {
-        add: 'sync',
-        remove: 'sync',
-        connect: 'async',
-        disconnect: 'async',
-        changes: 'source',
-        reconnect: 'sync',
-        disable: 'sync',
-        enable: 'sync',
-        ping: 'duplex',
-        get: 'sync',
-        peers: 'sync',
-        help: 'sync'
-      },
-      replicate: {
-        changes: 'source',
-        upto: 'source',
-        request: 'sync',
-        block: 'sync'
-      },
-      friends: {
-        hopStream: 'source',
-        onEdge: 'sync',
-        isFollowing: 'async',
-        isBlocking: 'async',
-        hops: 'async',
-        help: 'sync',
-        get: 'async',
-        createFriendStream: 'source',
-        stream: 'source'
-      },
-      blobs: {
-        get: 'source',
-        getSlice: 'source',
-        add: 'sink',
-        rm: 'async',
-        ls: 'source',
-        has: 'async',
-        size: 'async',
-        meta: 'async',
-        want: 'async',
-        push: 'async',
-        changes: 'source',
-        createWants: 'source',
-        help: 'sync'
-      },
-      invite: {
-        create: 'async',
-        use: 'async',
-        accept: 'async'
-      },
-      query: {
-        read: 'source',
-        explain: 'sync',
-        help: 'sync'
-      },
-      links2: {
-        read: 'source',
-        help: 'sync'
-      },
-      ws: {},
-      ebt: {
-        replicate: 'duplex',
-        request: 'sync',
-        block: 'sync',
-        peerStatus: 'sync'
-      },
-      ooo: {
-        stream: 'duplex',
-        get: 'async',
-        help: 'sync'
-      }
+      remote:
+        'ws://localhost:8989~shs:oyWQIW14NUVZ5VNiktFYPsIPDwEcH/Re4R9REpDHWn0='
     }
 
-    const sbot = shipyard(
-      { appname: 'ssb-shipyard-test15' },
-      { plugins: ssbServerPlugins, lenient: lenientList }
-    )
+    /** equivalent to passing in
+     * $ shipyard ssb-shipyard-test
+     * */
+    process.env.shipyard_test = appname
+    require('../bin')
 
-    t.true(sbot.hasOwnProperty('getVectorClock')) // ssb-db
-    t.true(sbot.hasOwnProperty('plugins'))
-    t.true(sbot.hasOwnProperty('private1'))
-    t.true(sbot.hasOwnProperty('onion'))
-    t.true(sbot.hasOwnProperty('unixSocket'))
-    t.true(sbot.hasOwnProperty('noAuth'))
-    t.true(sbot.hasOwnProperty('gossip'))
-    t.true(sbot.hasOwnProperty('replicate'))
-    t.true(sbot.hasOwnProperty('blobs'))
-    t.true(sbot.hasOwnProperty('invite'))
-    t.true(sbot.hasOwnProperty('local'))
-    t.true(sbot.hasOwnProperty('logging'))
-    t.true(sbot.hasOwnProperty('query'))
-    t.true(sbot.hasOwnProperty('links'))
-    t.true(sbot.hasOwnProperty('links2'))
-    t.true(sbot.hasOwnProperty('ws'))
-    t.true(sbot.hasOwnProperty('ebt'))
-    t.true(sbot.hasOwnProperty('ooo'))
-    t.truthy(sbot.ooo.get)
+    global.sbot.on('multiserver:listening', () => {
+      client(clientConfig.keys, clientConfig, async (error, rpc) => {
+        if (error) reject(error)
+      })
+    })
 
-    const manifest = sbot.manifest()
-
-    /** remove .failing from test to see diff */
-    t.deepEqual(
-      manifest,
-      ssbServerManifest_15_3_0,
-      'diff manifest compared to ssb-server'
-    )
-    sbot.close()
-  }
-)
+    global.sbot.on('rpc:connect', rpc => {
+      t.truthy(rpc)
+      const id = rpc.stream.address.split(':').pop()
+      resolve(t.true(clientConfig.keys.public.split('.ed25519')[0] === id))
+      global.sbot.close()
+    })
+  })
+})

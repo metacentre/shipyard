@@ -9,7 +9,7 @@ const debug = require('debug')('shipyard')
 const { announce } = require('./logging')
 
 // prettier-ignore
-function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } = {}) {
+function createServer(options = {}, { plugins = [], pluginsPath,  } = {}) {
   const appname = options.appname || process.env.ssb_appname || 'ssb'
   process.env.ssb_appname = appname // make git-ssb-web display the correct appname
 
@@ -38,7 +38,7 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
   if (plugins.length > 0) {
     announce(config, `config.shipyard.packages or config.mfe.apps[{packages}] or shipyard({},{plugins})=>`, `plugins array`)
     plugins.forEach(plugin => {
-      loadPlugin(createStack, plugin, lenient)
+      loadPlugin(createStack, plugin)
     })
   }
 
@@ -49,7 +49,7 @@ function createServer(options = {}, { plugins = [], pluginsPath, lenient = [] } 
       if (fileName.startsWith('.')) return
       const pluginPath = path.join(pluginsPath, fileName)
       debug('Plugin path: ', pluginPath)
-      loadPlugin(createStack, pluginPath, lenient)
+      loadPlugin(createStack, pluginPath)
     })
   }
 

@@ -15,12 +15,10 @@
  *    "pluginsPath": null,
  *    "packages": [
  *       {
- *        "plugins": "@metacentre/shipyard-ssb",
- *        "lenient": "@metacentre/shipyard-ssb/lenient"
+ *        "plugins": "@metacentre/shipyard-ssb"
  *      },
  *      {
- *        "plugins": "@metacentre/shipyard-oasis",
- *        "lenient": "@metacentre/shipyard-oasis/lenient"
+ *        "plugins": "@metacentre/shipyard-oasis"
  *      }
  *    ]
  *  },
@@ -79,17 +77,15 @@ if (shipyardConfig || config.mfe?.apps?.length > 0) {
     pkgs = packages.reduce(
       (acc, pkg) => {
         let p = pkg.plugins ? [requireArray(pkg.plugins)] : acc.plugins
-        const l = pkg.lenient ? [...requireArray(pkg.lenient)] : acc.lenient
         debug(JSON.stringify(p, null, 2))
         return {
-          plugins: [...acc.plugins, ...p],
-          lenient: [...acc.lenient, ...l]
+          plugins: [...acc.plugins, ...p]
         }
       },
-      { plugins: [], lenient: [] }
+      { plugins: [] }
     )
   }
 
-  const { plugins, lenient } = pkgs
-  shipyard({ appname }, { plugins, lenient, pluginsPath, attachGlobal })
+  const { plugins } = pkgs
+  shipyard({ appname }, { plugins, pluginsPath, attachGlobal })
 } else shipyard({ appname }, { attachGlobal })

@@ -3,7 +3,7 @@ const shipyard = require('..')
 const { join } = require('path')
 
 test.serial(
-  '11. creates stack and loads plugins all the way down the rabbit hole',
+  'creates stack and loads plugins all the way down the rabbit hole',
   t => {
     const pluginsModule = join(
       __dirname,
@@ -15,10 +15,7 @@ test.serial(
 
     const sbot = shipyard(
       { appname: 'ssb-shipyard-test11' },
-      {
-        plugins: rabbitHole,
-        lenient: require('@metacentre/shipyard-ssb/lenient')
-      }
+      { plugins: rabbitHole }
     )
     t.truthy(sbot.identities.publishAs)
     t.truthy(sbot.lan.start)
